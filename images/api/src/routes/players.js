@@ -7,8 +7,9 @@ module.exports = function initEndpoints(app, db) {
     const player = req.body;
     if (checkPlayerName(player.name)) {
       try {
-        const insertedPlayer = await db('players').insert(player).returning('*');
-        res.status(201).json(insertedPlayer[0]);
+        const result = await db.query('INSERT INTO players (name) VALUES ($1) RETURNING *', [player.name]);
+        const insertedPlayer = result.rows[0];
+        res.status(201).json(insertedPlayer);
       } catch (err) {
         res.status(500).json({ error: err.message });
       }
@@ -19,7 +20,8 @@ module.exports = function initEndpoints(app, db) {
 
   router.get('/players', async (req, res) => {
     try {
-      const players = await db('players');
+      const result = await db.query('SELECT * FROM players');
+      const players = result.rows;
       res.json(players);
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -28,4 +30,5 @@ module.exports = function initEndpoints(app, db) {
 
   app.use('/api', router); 
 };
+
 

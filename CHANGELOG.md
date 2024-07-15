@@ -7,6 +7,21 @@ All notable changes to this project will be documented in this file.
 - Fix bugs or issues that have been resolved but not yet released.
 - Make other changes or improvements that are completed but pending release.
 
+## [0.0.4] - 2024-07-15
+
+### Added
+- **Unit Tests**: Added unit tests for player management endpoints and validation functions.
+
+## [0.0.3] - 2024-07-14
+
+### Added
+- **Player Management Endpoints**: Added endpoints for managing player data including routes for adding and retrieving players.
+- **PostgreSQL Integration**: Configured PostgreSQL integration and added environment variable template for database configuration.
+- **Helper Functions**: Created helper functions for endpoint validation to ensure data integrity.
+
+### Updated
+- **Docker Compose Configuration**: Updated Docker Compose configuration to orchestrate API and PostgreSQL services.
+
 ## [0.0.2] - 2024-05-12  
 
 ### Added

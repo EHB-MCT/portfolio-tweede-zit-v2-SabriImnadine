@@ -11,7 +11,7 @@ guidelines when contributing to this projects:
 2. Clone the project to your local machine.
    
    ```bash
-   git clone https://github.com/your-username/[your-project].git
+   git clone https://github.com/EHB-MCT/portfolio-tweede-zit-v2-SabriImnadine.git
    ```
 
 3. Create a branch for your feature or bug fix.
