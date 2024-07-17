@@ -22,34 +22,37 @@ describe('Players API', () => {
     jest.clearAllMocks();
   });
 
-  it('should return 400 if name is not formatted correctly', async () => {
-    const response = await request(app).post('/api/players').send({ name: '' });
+  it('should return 400 if player details are not complete', async () => {
+    const response = await request(app).post('/api/players').send({ first_name: '' });
     expect(response.status).toBe(400);
-    expect(response.body.message).toBe('Name not formatted correctly');
+    expect(response.body.error).toBe('All player details are required');
   });
 
   it('should return 201 if player is added successfully', async () => {
-    pool.query.mockResolvedValueOnce({ rows: [{ id: 1, name: 'Lamine Yamal' }] });
+    const newPlayer = { first_name: 'Lamine', last_name: 'Yamal', age: 16, nationality: 'Spanish', position: 'Forward', club_id: 2 };
+    pool.query.mockResolvedValueOnce({ rows: [{ id: 1, ...newPlayer }] });
 
-    const response = await request(app).post('/api/players').send({ name: 'Lamine Yamal' });
+    const response = await request(app).post('/api/players').send(newPlayer);
     expect(response.status).toBe(201);
-    expect(response.body.name).toBe('Lamine Yamal');
+    expect(response.body).toMatchObject(newPlayer);
   });
 
   it('should return 500 if there is a database error', async () => {
+    const newPlayer = { first_name: 'Lamine', last_name: 'Yamal', age: 16, nationality: 'Spanish', position: 'Forward', club_id: 2 };
     pool.query.mockRejectedValueOnce(new Error('Database error'));
 
-    const response = await request(app).post('/api/players').send({ name: 'Lamine Yamal' });
+    const response = await request(app).post('/api/players').send(newPlayer);
     expect(response.status).toBe(500);
     expect(response.body.error).toBe('Database error');
   });
 
   it('should return 200 and list of players', async () => {
-    pool.query.mockResolvedValueOnce({ rows: [{ id: 1, name: 'Sterling' }] });
+    const playersData = [{ id: 1, first_name: 'Raheem', last_name: 'Sterling', age: 27, nationality: 'English', position: 'Forward', club_id: 1 }];
+    pool.query.mockResolvedValueOnce({ rows: playersData });
 
     const response = await request(app).get('/api/players');
     expect(response.status).toBe(200);
-    expect(response.body).toEqual([{ id: 1, name: 'Sterling' }]);
+    expect(response.body).toEqual(playersData);
   });
 });
 

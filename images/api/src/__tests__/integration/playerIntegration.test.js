@@ -23,32 +23,31 @@ describe('Players API', () => {
   });
 
   it('should create a new player', async () => {
-    const newPlayer = { name: 'Lamine Yamal' };
-    pool.query.mockResolvedValueOnce({ rows: [{ id: 1, name: newPlayer.name }] });
+    const newPlayer = { first_name: 'Lamine', last_name: 'Yamal', age: 16, nationality: 'Spanish', position: 'Forward', club_id: 1 };
+    pool.query.mockResolvedValueOnce({ rows: [{ id: 1, ...newPlayer }] });
 
     const response = await request(app).post('/api/players').send(newPlayer);
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('id');
-    expect(response.body).toHaveProperty('name', newPlayer.name);
+    expect(response.body).toMatchObject(newPlayer);
 
     const dbRecord = await pool.query.mock.results[0].value;
     expect(dbRecord.rows.length).toBeGreaterThan(0);
-    expect(dbRecord.rows[0]).toHaveProperty('name', newPlayer.name);
+    expect(dbRecord.rows[0]).toMatchObject(newPlayer);
   });
 
   it('should return the correct player record', async () => {
     const playerId = 1;
-    const playerData = { id: playerId, name: 'Sterling' };
+    const playerData = { id: playerId, first_name: 'Raheem', last_name: 'Sterling', age: 27, nationality: 'English', position: 'Forward', club_id: 1 };
     pool.query.mockResolvedValueOnce({ rows: [playerData] });
 
     const response = await request(app).get(`/api/players/${playerId}`);
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('id', playerId);
-    expect(response.body).toHaveProperty('name', playerData.name);
+    expect(response.body).toMatchObject(playerData);
 
     const dbRecord = await pool.query.mock.results[0].value;
     expect(dbRecord.rows.length).toBeGreaterThan(0);
-    expect(dbRecord.rows[0]).toHaveProperty('id', playerId);
+    expect(dbRecord.rows[0]).toMatchObject(playerData);
   });
 
   it('should return 404 for non-existent player', async () => {
@@ -83,8 +82,8 @@ describe('Players API', () => {
 
   it('should return all players', async () => {
     const playersData = [
-      { id: 1, name: 'Sterling' },
-      { id: 2, name: 'Lamine Yamal' },
+      { id: 1, first_name: 'Raheem', last_name: 'Sterling', age: 27, nationality: 'English', position: 'Forward', club_id: 1 },
+      { id: 2, first_name: 'Lamine', last_name: 'Yamal', age: 16, nationality: 'Spanish', position: 'Forward', club_id: 2 },
     ];
     pool.query.mockResolvedValueOnce({ rows: playersData });
 
@@ -97,7 +96,7 @@ describe('Players API', () => {
   });
 
   it('should handle database error on player creation', async () => {
-    const newPlayer = { name: 'Lamine Yamal' };
+    const newPlayer = { first_name: 'Lamine', last_name: 'Yamal', age: 16, nationality: 'Spanish', position: 'Forward', club_id: 2 };
     pool.query.mockRejectedValueOnce(new Error('Database error'));
 
     const response = await request(app).post('/api/players').send(newPlayer);
@@ -120,6 +119,5 @@ describe('Players API', () => {
     expect(response.status).toBe(500);
   });
 });
-
 
 

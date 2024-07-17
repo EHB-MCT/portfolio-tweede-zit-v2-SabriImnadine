@@ -7,6 +7,18 @@ All notable changes to this project will be documented in this file.
 - Fix bugs or issues that have been resolved but not yet released.
 - Make other changes or improvements that are completed but pending release.
 
+## [0.0.5] - 2024-07-17
+### Added
+- **Club and Player Management**: Implemented player management with club association to provide an overview of players along with their respective clubs.
+- **Database Migrations**: Added new migration scripts for clubs and players tables, including relationships.
+- **Seeding Data**: Created seed scripts to populate clubs and players tables with sample data.
+Enhanced API: Updated API endpoints to join players and clubs tables and display player information along with club names.
+
+### Updated
+- **Tests**: Modified and added integration and unit tests to cover new functionality and ensure data integrity.
+- **Helper Functions**: Improved helper functions to handle new data structure validations.
+- **Docker Compose Configuration**: Adjusted Docker Compose setup to ensure proper environment variable usage and service dependency management.
+
 ## [0.0.4] - 2024-07-15
 
 ### Added

@@ -1,18 +1,15 @@
-const { checkPlayerName } = require('../../helpers/endpointHelpers');
+const { checkPlayerDetails } = require('../../helpers/endpointHelpers');
 
-test('checkPlayerName returns false for invalid names', () => {
-  expect(checkPlayerName(null)).toBe(false);
-  expect(checkPlayerName(123)).toBe(false);
-  expect(checkPlayerName('')).toBe(false);
-  expect(checkPlayerName('   ')).toBe(false);
-  expect(checkPlayerName(false)).toBe(false);
-  expect(checkPlayerName(undefined)).toBe(false);
-  expect(checkPlayerName('ksjdkvnsdkjnvksdjnvkslbdsfsdfbhsdfsdbfjqfdfhsgdhjkfdsqgfsjdqhkfsdfqjnvsd')).toBe(false); // Long string
+test('checkPlayerDetails returns false for invalid details', () => {
+  expect(checkPlayerDetails(null)).toBe(false);
+  expect(checkPlayerDetails({})).toBe(false);
+  expect(checkPlayerDetails({ first_name: 'Sterling' })).toBe(false);
+  expect(checkPlayerDetails({ first_name: 'Sterling', last_name: '' })).toBe(false);
+  expect(checkPlayerDetails({ first_name: 'Sterling', last_name: 'Sterling', age: 27, nationality: 'English', position: '', club_id: 1 })).toBe(false);
 });
 
-test('checkPlayerName returns true for valid names', () => {
-  expect(checkPlayerName('Sterling')).toBe(true);
-  expect(checkPlayerName('Lamine Yamal')).toBe(true);
+test('checkPlayerDetails returns true for valid details', () => {
+  const validPlayer = { first_name: 'Sterling', last_name: 'Sterling', age: 27, nationality: 'English', position: 'Forward', club_id: 1 };
+  expect(checkPlayerDetails(validPlayer)).toBe(true);
 });
-
 
