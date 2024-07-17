@@ -6,7 +6,7 @@
   "scripts": {
     "test_watch": "jest --watchAll --detectOpenHandles",
     "test": "jest --detectOpenHandles",
-    "start": "npx knex migrate:latest --cwd ./src/db && npm run test && npx knex migrate:latest --cwd ./src/db && npx knex seed:run",
+    "start": "npx knex migrate:latest --cwd ./src/db && npm run test && node src/index.js",
     "dev": "npx knex migrate:latest --cwd ./src/db && npx knex seed:run --cwd .src/db && npm run test_watch"
   },
   "author": "",
