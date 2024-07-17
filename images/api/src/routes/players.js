@@ -18,6 +18,27 @@ module.exports = function initEndpoints(app, db) {
     }
   });
 
+  router.get('/players/:id', async (req, res) => {
+    const playerId = parseInt(req.params.id, 10);
+
+    // Validate player ID
+    if (isNaN(playerId) || playerId < 0 || playerId > 999999999) {
+      return res.status(400).send();
+    }
+
+    try {
+      const result = await db.query('SELECT * FROM players WHERE id = $1', [playerId]);
+      if (!result || result.rows.length === 0) {
+        return res.status(404).send();
+      }
+
+      res.status(200).json(result.rows[0]);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send();
+    }
+  });
+
   router.get('/players', async (req, res) => {
     try {
       const result = await db.query('SELECT * FROM players');
@@ -30,5 +51,7 @@ module.exports = function initEndpoints(app, db) {
 
   app.use('/api', router); 
 };
+
+
 
 

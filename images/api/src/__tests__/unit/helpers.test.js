@@ -1,4 +1,4 @@
-const { checkPlayerName } = require('../helpers/endpointHelpers');
+const { checkPlayerName } = require('../../helpers/endpointHelpers');
 
 test('checkPlayerName returns false for invalid names', () => {
   expect(checkPlayerName(null)).toBe(false);

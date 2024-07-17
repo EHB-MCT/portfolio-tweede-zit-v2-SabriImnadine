@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../routes/app');
+const app = require('../../routes/app');
 const { Pool } = require('pg');
 
 jest.mock('pg', () => {

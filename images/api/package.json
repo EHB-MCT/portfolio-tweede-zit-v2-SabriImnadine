@@ -4,20 +4,22 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon src/index.js",
-    "test": "jest --watchAll",
-    "migrate": "knex migrate:latest",
-    "seed": "knex seed:run"
+    "test_watch": "jest --watchAll --detectOpenHandles",
+    "test": "jest --detectOpenHandles",
+    "start": "npx knex migrate:latest --cwd ./src/db && npm run test && npx knex migrate:latest --cwd ./src/db && npx knex seed:run",
+    "dev": "npx knex migrate:latest --cwd ./src/db && npx knex seed:run --cwd .src/db && npm run test_watch"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "knex": "^2.5.1",
     "nodemon": "^3.1.0",
     "pg": "^8.11.3"
   },
   "devDependencies": {
+    "assert": "^2.1.0",
     "jest": "^29.7.0",
     "supertest": "^7.0.0"
   }
