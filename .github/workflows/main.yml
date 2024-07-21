@@ -32,8 +32,16 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Navigate to API directory
+        run: cd images/api
+
+      - name: Verify directory contents
+        run: ls -la images/api
+
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd images/api
+          npm install
 
       - name: Build docker containers
         run: docker-compose build
@@ -72,8 +80,16 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Navigate to API directory
+        run: cd images/api
+
+      - name: Verify directory contents
+        run: ls -la images/api
+
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd images/api
+          npm install
 
       - name: Build
         run: docker-compose build
