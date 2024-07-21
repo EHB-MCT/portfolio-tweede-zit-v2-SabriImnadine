@@ -33,12 +33,6 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Navigate to API directory
-        run: cd images/api
-
-      - name: Verify directory contents
-        run: ls -la images/api
-
       - name: Create .env file
         run: |
           echo POSTGRES_USER=myuser > images/api/.env
@@ -46,6 +40,9 @@ jobs:
           echo POSTGRES_DB=mydatabase >> images/api/.env
           echo POSTGRES_HOST_AUTH_METHOD=trust >> images/api/.env
           echo PG_CONNECTION_STRING=postgres://myuser:mypassword@store:5432/mydatabase >> images/api/.env
+
+      - name: Verify .env file
+        run: cat images/api/.env
 
       - name: Install dependencies
         run: |
@@ -93,12 +90,6 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Navigate to API directory
-        run: cd images/api
-
-      - name: Verify directory contents
-        run: ls -la images/api
-
       - name: Create .env file
         run: |
           echo POSTGRES_USER=myuser > images/api/.env
@@ -106,6 +97,9 @@ jobs:
           echo POSTGRES_DB=mydatabase >> images/api/.env
           echo POSTGRES_HOST_AUTH_METHOD=trust >> images/api/.env
           echo PG_CONNECTION_STRING=postgres://myuser:mypassword@store:5432/mydatabase >> images/api/.env
+
+      - name: Verify .env file
+        run: cat images/api/.env
 
       - name: Install dependencies
         run: |
@@ -133,6 +127,7 @@ jobs:
         run: |
           cd images/api
           docker-compose push
+
 
 
 
