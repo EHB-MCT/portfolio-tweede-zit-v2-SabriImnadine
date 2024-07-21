@@ -39,6 +39,14 @@ jobs:
       - name: Verify directory contents
         run: ls -la images/api
 
+      - name: Create .env file
+        run: |
+          echo POSTGRES_USER=myuser > images/api/.env
+          echo POSTGRES_PASSWORD=mypassword >> images/api/.env
+          echo POSTGRES_DB=mydatabase >> images/api/.env
+          echo POSTGRES_HOST_AUTH_METHOD=trust >> images/api/.env
+          echo PG_CONNECTION_STRING=postgres://myuser:mypassword@store:5432/mydatabase >> images/api/.env
+
       - name: Install dependencies
         run: |
           cd images/api
@@ -90,6 +98,14 @@ jobs:
 
       - name: Verify directory contents
         run: ls -la images/api
+
+      - name: Create .env file
+        run: |
+          echo POSTGRES_USER=myuser > images/api/.env
+          echo POSTGRES_PASSWORD=mypassword >> images/api/.env
+          echo POSTGRES_DB=mydatabase >> images/api/.env
+          echo POSTGRES_HOST_AUTH_METHOD=trust >> images/api/.env
+          echo PG_CONNECTION_STRING=postgres://myuser:mypassword@store:5432/mydatabase >> images/api/.env
 
       - name: Install dependencies
         run: |
