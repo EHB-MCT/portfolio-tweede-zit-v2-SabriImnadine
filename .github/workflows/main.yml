@@ -69,19 +69,23 @@ jobs:
           cat images/api/.env
 
       - name: Build docker containers
+        env:
+          DOCKER_ENV_FILE: images/api/.env
         run: |
           cd images/api
           echo "Listing files in images/api before docker-compose build:"
           ls -la
-          docker-compose --env-file .env build
+          DOCKER_ENV_FILE=images/api/.env docker-compose build
           cd ../..
 
       - name: Run docker containers
+        env:
+          DOCKER_ENV_FILE: images/api/.env
         run: |
           cd images/api
           echo "Listing files in images/api before docker-compose up:"
           ls -la
-          docker-compose --env-file .env up --exit-code-from api
+          DOCKER_ENV_FILE=images/api/.env docker-compose up --exit-code-from api
           cd ../..
           echo "--- Completed test cases ---"
 
@@ -144,11 +148,13 @@ jobs:
           cat images/api/.env
 
       - name: Build
+        env:
+          DOCKER_ENV_FILE: images/api/.env
         run: |
           cd images/api
           echo "Listing files in images/api before docker-compose build:"
           ls -la
-          docker-compose --env-file .env build
+          DOCKER_ENV_FILE=images/api/.env docker-compose build
           cd ../..
 
       - name: Login to Docker Hub
@@ -158,9 +164,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Publish
+        env:
+          DOCKER_ENV_FILE: images/api/.env
         run: |
           cd images/api
-          docker-compose --env-file .env push
+          DOCKER_ENV_FILE=images/api/.env docker-compose push
           cd ../..
 
 
