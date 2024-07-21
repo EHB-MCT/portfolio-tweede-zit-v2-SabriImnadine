@@ -53,7 +53,7 @@ jobs:
 
       - name: Build docker containers
         working-directory: images/api
-        run: docker-compose build
+        run: docker-compose --env-file images/api/.env build
         env:
           POSTGRES_USER: ${{ env.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
@@ -65,7 +65,7 @@ jobs:
         working-directory: images/api
         run: |
           echo --- Running test cases ---
-          docker-compose up --exit-code-from api
+          docker-compose --env-file images/api/.env up --exit-code-from api
           echo --- Completed test cases ---
 
   build:
@@ -111,7 +111,7 @@ jobs:
 
       - name: Build
         working-directory: images/api
-        run: docker-compose build
+        run: docker-compose --env-file images/api/.env build
         env:
           POSTGRES_USER: ${{ env.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
@@ -127,7 +127,8 @@ jobs:
 
       - name: Publish
         working-directory: images/api
-        run: docker-compose push
+        run: docker-compose --env-file images/api/.env push
+
 
 
 
