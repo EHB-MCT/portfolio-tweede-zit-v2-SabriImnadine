@@ -1,0 +1,168 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [dev]
+
+env:
+  POSTGRES_USER: myuser
+  POSTGRES_PASSWORD: mypassword
+  POSTGRES_DB: mydatabase
+  POSTGRES_HOST_AUTH_METHOD: trust
+  PG_CONNECTION_STRING: postgres://myuser:mypassword@store:5432/mydatabase
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Set up Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Create .env file
+        run: |
+          mkdir -p images/api
+          echo POSTGRES_USER=myuser > images/api/.env
+          echo POSTGRES_PASSWORD=mypassword >> images/api/.env
+          echo POSTGRES_DB=mydatabase >> images/api/.env
+          echo POSTGRES_HOST_AUTH_METHOD=trust >> images/api/.env
+          echo PG_CONNECTION_STRING=postgres://myuser:mypassword@store:5432/mydatabase >> images/api/.env
+
+      - name: Verify .env file
+        run: cat $(pwd)/images/api/.env
+
+      - name: List files before npm install
+        run: |
+          echo "Listing files in images/api before npm install:"
+          ls -la images/api
+
+      - name: Install dependencies
+        run: |
+          cd images/api
+          npm install
+          cd ../..
+
+      - name: List files after npm install
+        run: |
+          echo "Listing files in images/api after npm install:"
+          ls -la images/api
+
+      - name: Verify .env file before build
+        run: |
+          echo "Verifying .env file before build:"
+          ls -la $(pwd)/images/api/.env
+          cat $(pwd)/images/api/.env
+
+      - name: Build docker containers
+        run: |
+          cd images/api
+          docker-compose --env-file $(pwd)/images/api/.env build
+          cd ../..
+
+      - name: Run docker containers
+        run: |
+          cd images/api
+          docker-compose --env-file $(pwd)/images/api/.env up --exit-code-from api
+          cd ../..
+          echo "--- Completed test cases ---"
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Set up Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Create .env file
+        run: |
+          mkdir -p images/api
+          echo POSTGRES_USER=myuser > images/api/.env
+          echo POSTGRES_PASSWORD=mypassword >> images/api/.env
+          echo POSTGRES_DB=mydatabase >> images/api/.env
+          echo POSTGRES_HOST_AUTH_METHOD=trust >> images/api/.env
+          echo PG_CONNECTION_STRING=postgres://myuser:mypassword@store:5432/mydatabase >> images/api/.env
+
+      - name: Verify .env file
+        run: cat $(pwd)/images/api/.env
+
+      - name: List files before npm install
+        run: |
+          echo "Listing files in images/api before npm install:"
+          ls -la images/api
+
+      - name: Install dependencies
+        run: |
+          cd images/api
+          npm install
+          cd ../..
+
+      - name: List files after npm install
+        run: |
+          echo "Listing files in images/api after npm install:"
+          ls -la images/api
+
+      - name: Verify .env file before build
+        run: |
+          echo "Verifying .env file before build:"
+          ls -la $(pwd)/images/api/.env
+          cat $(pwd)/images/api/.env
+
+      - name: Build
+        run: |
+          cd images/api
+          docker-compose --env-file $(pwd)/images/api/.env build
+          cd ../..
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Publish
+        run: |
+          cd images/api
+          docker-compose --env-file $(pwd)/images/api/.env push
+          cd ../..
+
+
+
+
+
+
+
+
+
+
