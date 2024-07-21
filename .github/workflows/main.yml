@@ -35,32 +35,46 @@ jobs:
           node-version: '20'
 
       - name: Create .env file
-        working-directory: images/api
         run: |
-          echo POSTGRES_USER=myuser > .env
-          echo POSTGRES_PASSWORD=mypassword >> .env
-          echo POSTGRES_DB=mydatabase >> .env
-          echo POSTGRES_HOST_AUTH_METHOD=trust >> .env
-          echo PG_CONNECTION_STRING=postgres://myuser:mypassword@store:5432/mydatabase >> .env
+          echo POSTGRES_USER=myuser > images/api/.env
+          echo POSTGRES_PASSWORD=mypassword >> images/api/.env
+          echo POSTGRES_DB=mydatabase >> images/api/.env
+          echo POSTGRES_HOST_AUTH_METHOD=trust >> images/api/.env
+          echo PG_CONNECTION_STRING=postgres://myuser:mypassword@store:5432/mydatabase >> images/api/.env
 
       - name: Verify .env file
-        working-directory: images/api
-        run: cat .env
+        run: |
+          echo "Contents of .env file:"
+          cat images/api/.env
+
+      - name: List files in images/api directory
+        run: |
+          echo "Listing files in images/api:"
+          ls -la images/api
 
       - name: Install dependencies
         working-directory: images/api
         run: npm install
 
+      - name: List files after npm install
+        run: |
+          echo "Listing files in images/api after npm install:"
+          ls -la images/api
+
       - name: Build docker containers
         working-directory: images/api
-        run: docker-compose --env-file .env build
+        run: |
+          echo "Listing files in images/api before docker-compose build:"
+          ls -la images/api
+          docker-compose --env-file .env build
 
       - name: Run docker containers
         working-directory: images/api
         run: |
-          echo --- Running test cases ---
+          echo "Listing files in images/api before docker-compose up:"
+          ls -la images/api
           docker-compose --env-file .env up --exit-code-from api
-          echo --- Completed test cases ---
+          echo "--- Completed test cases ---"
 
   build:
     needs: test
@@ -87,25 +101,38 @@ jobs:
           node-version: '20'
 
       - name: Create .env file
-        working-directory: images/api
         run: |
-          echo POSTGRES_USER=myuser > .env
-          echo POSTGRES_PASSWORD=mypassword >> .env
-          echo POSTGRES_DB=mydatabase >> .env
-          echo POSTGRES_HOST_AUTH_METHOD=trust >> .env
-          echo PG_CONNECTION_STRING=postgres://myuser:mypassword@store:5432/mydatabase >> .env
+          echo POSTGRES_USER=myuser > images/api/.env
+          echo POSTGRES_PASSWORD=mypassword >> images/api/.env
+          echo POSTGRES_DB=mydatabase >> images/api/.env
+          echo POSTGRES_HOST_AUTH_METHOD=trust >> images/api/.env
+          echo PG_CONNECTION_STRING=postgres://myuser:mypassword@store:5432/mydatabase >> images/api/.env
 
       - name: Verify .env file
-        working-directory: images/api
-        run: cat .env
+        run: |
+          echo "Contents of .env file:"
+          cat images/api/.env
+
+      - name: List files in images/api directory
+        run: |
+          echo "Listing files in images/api:"
+          ls -la images/api
 
       - name: Install dependencies
         working-directory: images/api
         run: npm install
 
-      - name: Build
+      - name: List files after npm install
+        run: |
+          echo "Listing files in images/api after npm install:"
+          ls -la images/api
+
+      - name: Build docker containers
         working-directory: images/api
-        run: docker-compose --env-file .env build
+        run: |
+          echo "Listing files in images/api before docker-compose build:"
+          ls -la images/api
+          docker-compose --env-file .env build
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -116,6 +143,7 @@ jobs:
       - name: Publish
         working-directory: images/api
         run: docker-compose --env-file .env push
+
 
 
 
