@@ -28,7 +28,6 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-
       - name: Set up Node.js 20.x
         uses: actions/setup-node@v3
         with:
@@ -37,49 +36,42 @@ jobs:
       - name: Create .env file
         run: |
           mkdir -p images/api
-          echo POSTGRES_USER=myuser > images/api/.env
-          echo POSTGRES_PASSWORD=mypassword >> images/api/.env
-          echo POSTGRES_DB=mydatabase >> images/api/.env
-          echo POSTGRES_HOST_AUTH_METHOD=trust >> images/api/.env
-          echo PG_CONNECTION_STRING=postgres://myuser:mypassword@store:5432/mydatabase >> images/api/.env
-
+          echo POSTGRES_USER=$POSTGRES_USER > images/api/.env
+          echo POSTGRES_PASSWORD=$POSTGRES_PASSWORD >> images/api/.env
+          echo POSTGRES_DB=$POSTGRES_DB >> images/api/.env
+          echo POSTGRES_HOST_AUTH_METHOD=$POSTGRES_HOST_AUTH_METHOD >> images/api/.env
+          echo PG_CONNECTION_STRING=$PG_CONNECTION_STRING >> images/api/.env
       - name: Verify .env file
-        run: cat $(pwd)/images/api/.env
+        run: cat images/api/.env
 
       - name: List files before npm install
         run: |
           echo "Listing files in images/api before npm install:"
           ls -la images/api
-
       - name: Install dependencies
         run: |
           cd images/api
           npm install
           cd ../..
-
       - name: List files after npm install
         run: |
           echo "Listing files in images/api after npm install:"
           ls -la images/api
-
       - name: Verify .env file before build
         run: |
           echo "Verifying .env file before build:"
-          ls -la $(pwd)/images/api/.env
-          cat $(pwd)/images/api/.env
-
+          ls -la images/api/.env
+          cat images/api/.env
       - name: Build docker containers
         run: |
+          echo "Listing files before docker-compose build:"
+          ls -la images/api
           cd images/api
-          docker-compose --env-file $(pwd)/images/api/.env build
-          cd ../..
-
-      - name: Run docker containers
+          docker-compose --env-file .env build
+      - name: Run docker containers and execute tests
         run: |
           cd images/api
-          docker-compose --env-file $(pwd)/images/api/.env up --exit-code-from api
-          cd ../..
-          echo "--- Completed test cases ---"
+          docker-compose --env-file .env up --abort-on-container-exit --exit-code-from api
 
   build:
     needs: test
@@ -99,7 +91,6 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-
       - name: Set up Node.js 20.x
         uses: actions/setup-node@v3
         with:
@@ -108,43 +99,38 @@ jobs:
       - name: Create .env file
         run: |
           mkdir -p images/api
-          echo POSTGRES_USER=myuser > images/api/.env
-          echo POSTGRES_PASSWORD=mypassword >> images/api/.env
-          echo POSTGRES_DB=mydatabase >> images/api/.env
-          echo POSTGRES_HOST_AUTH_METHOD=trust >> images/api/.env
-          echo PG_CONNECTION_STRING=postgres://myuser:mypassword@store:5432/mydatabase >> images/api/.env
-
+          echo POSTGRES_USER=$POSTGRES_USER > images/api/.env
+          echo POSTGRES_PASSWORD=$POSTGRES_PASSWORD >> images/api/.env
+          echo POSTGRES_DB=$POSTGRES_DB >> images/api/.env
+          echo POSTGRES_HOST_AUTH_METHOD=$POSTGRES_HOST_AUTH_METHOD >> images/api/.env
+          echo PG_CONNECTION_STRING=$PG_CONNECTION_STRING >> images/api/.env
       - name: Verify .env file
-        run: cat $(pwd)/images/api/.env
+        run: cat images/api/.env
 
       - name: List files before npm install
         run: |
           echo "Listing files in images/api before npm install:"
           ls -la images/api
-
       - name: Install dependencies
         run: |
           cd images/api
           npm install
           cd ../..
-
       - name: List files after npm install
         run: |
           echo "Listing files in images/api after npm install:"
           ls -la images/api
-
       - name: Verify .env file before build
         run: |
           echo "Verifying .env file before build:"
-          ls -la $(pwd)/images/api/.env
-          cat $(pwd)/images/api/.env
-
+          ls -la images/api/.env
+          cat images/api/.env
       - name: Build
         run: |
+          echo "Listing files before docker-compose build:"
+          ls -la images/api
           cd images/api
-          docker-compose --env-file $(pwd)/images/api/.env build
-          cd ../..
-
+          docker-compose --env-file .env build
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -154,9 +140,7 @@ jobs:
       - name: Publish
         run: |
           cd images/api
-          docker-compose --env-file $(pwd)/images/api/.env push
-          cd ../..
-
+          docker-compose --env-file .env push
 
 
 
