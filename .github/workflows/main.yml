@@ -15,7 +15,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -35,6 +36,7 @@ jobs:
 
       - name: Create .env file
         run: |
+          mkdir -p images/api
           echo POSTGRES_USER=myuser > images/api/.env
           echo POSTGRES_PASSWORD=mypassword >> images/api/.env
           echo POSTGRES_DB=mydatabase >> images/api/.env
@@ -50,9 +52,8 @@ jobs:
           npm install
 
       - name: Build docker containers
-        run: |
-          cd images/api
-          docker-compose build
+        working-directory: images/api
+        run: docker-compose build
         env:
           POSTGRES_USER: ${{ env.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
@@ -61,8 +62,8 @@ jobs:
           PG_CONNECTION_STRING: ${{ env.PG_CONNECTION_STRING }}
 
       - name: Run docker containers
+        working-directory: images/api
         run: |
-          cd images/api
           echo --- Running test cases ---
           docker-compose up --exit-code-from api
           echo --- Completed test cases ---
@@ -72,7 +73,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -92,6 +94,7 @@ jobs:
 
       - name: Create .env file
         run: |
+          mkdir -p images/api
           echo POSTGRES_USER=myuser > images/api/.env
           echo POSTGRES_PASSWORD=mypassword >> images/api/.env
           echo POSTGRES_DB=mydatabase >> images/api/.env
@@ -107,9 +110,8 @@ jobs:
           npm install
 
       - name: Build
-        run: |
-          cd images/api
-          docker-compose build
+        working-directory: images/api
+        run: docker-compose build
         env:
           POSTGRES_USER: ${{ env.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
@@ -124,9 +126,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Publish
-        run: |
-          cd images/api
-          docker-compose push
+        working-directory: images/api
+        run: docker-compose push
+
 
 
 
