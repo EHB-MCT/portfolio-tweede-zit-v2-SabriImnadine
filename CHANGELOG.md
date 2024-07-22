@@ -7,6 +7,30 @@ All notable changes to this project will be documented in this file.
 - Fix bugs or issues that have been resolved but not yet released.
 - Make other changes or improvements that are completed but pending release.
 
+## [0.0.9] - 2024-07-22
+### Added
+- **Healthchecks in Docker Compose**: Added healthchecks for both the `api` and `store` services to ensure proper startup and readiness of services.
+
+## [0.0.8] - 2024-07-21
+### Added
+- **GitHub Actions Workflow Enhancements**: Updated the GitHub Actions workflow to properly build and test Docker containers, including the addition of `.env` file creation and verification steps.
+
+### Updated
+- **Tests**: Modified and added integration and unit tests to cover new functionality and ensure data integrity.
+- **Helper Functions**: Improved helper functions to handle new data structure validations.
+
+## [0.0.7] - 2024-07-20
+### Added
+- **Dockerfile Modifications**: Modified the Dockerfile to streamline the build process and ensure proper startup using `wait-for-it.sh`.
+
+### Updated
+- **Docker Compose Configuration**: Adjusted Docker Compose setup to ensure proper environment variable usage and service dependency management.
+- **API Enhancements**: Updated API endpoints to join players and clubs tables and display player information along with club names.
+
+## [0.0.6] - 2024-07-19
+### Added
+- **Integration with GitHub Actions**: Set up initial GitHub Actions workflow for CI/CD pipeline.
+
 ## [0.0.5] - 2024-07-17
 ### Added
 - **Club and Player Management**: Implemented player management with club association to provide an overview of players along with their respective clubs.
