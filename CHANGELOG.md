@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 ## [0.0.9] - 2024-07-22
 ### Added
 - **Healthchecks in Docker Compose**: Added healthchecks for both the `api` and `store` services to ensure proper startup and readiness of services.
+### Updated
+- **README**: Adjusted README file with the final configuration.
 
 ## [0.0.8] - 2024-07-21
 ### Added
